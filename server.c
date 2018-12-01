@@ -29,7 +29,7 @@ int main()
         perror("socket creation failed");
         exit(EXIT_FAILURE);
     }
-    printf("Olá, eu sou o servidor\nEsperando respostas...\n\n\n");
+
     memset(&servaddr, 0, sizeof(servaddr));
     memset(&cliaddr, 0, sizeof(cliaddr));
 
@@ -37,7 +37,7 @@ int main()
     servaddr.sin_family = AF_INET; // IPv4
     servaddr.sin_addr.s_addr = INADDR_ANY;
     servaddr.sin_port = htons(PORT);
-    printf("\nErro");
+
     // Bind the socket with the server address
     if (bind(sockfd, (const struct sockaddr *)&servaddr,
              sizeof(servaddr)) < 0)
@@ -51,37 +51,16 @@ int main()
                  MSG_WAITALL, (struct sockaddr *)&cliaddr,
                  &len);
     buffer[n] = '\0';
-    char arr[sizeof(buffer)];
-    strcpy(arr, buffer);
-    int le = sizeof(arr) / sizeof(arr[0]);
-
     int i = 0;
-    int j = 0;
-    char palavra[] = "/0";
-
-    for (j = 0; j < strlen(arr); j++) {
-        if(arr[j + 1] == '\0') {
+    for (i = 0; i < strlen(buffer); i++) {
+        if (buffer[i] == '\0') {
+            buffer2[i - 1] = '\0';
             break;
         }
-        int barraZero = FALSE;
-        int i = 0;
-        while(barraZero == FALSE) {
-            palavra[i] = arr[i];
-            if (arr[i] == '\0') {
-                barraZero = TRUE;
-            }
-        }
-        for (i = 0; i < strlen(palavra); i++) {
-            if (palavra[i] == '\0') {
-                buffer2[i - 1] = '\0';
-                break;
-            }
-            buffer2[i - 1] = palavra[i];
-        }
-        printf("Client : %s\n", buffer2);
+        buffer2[i - 1] = buffer[i];
     }
 
-    // printf("Client : %s\n", buffer2);
+    printf("Client : %s\n", buffer2);
 
     sendto(sockfd, (const char *)hello, strlen(hello),
            MSG_CONFIRM, (const struct sockaddr *)&cliaddr,

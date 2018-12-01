@@ -18,12 +18,10 @@ int main()
     char buffer[MAXLINE];
     char *hello = "Teste";
     struct sockaddr_in servaddr;
-    // char msg[150] = "\0";
-    // strcat(msg, "a");
-    // strcat(msg, hello);
-    // strcat(msg, "\0");
-    // const char *arr[] = {"aTeste1", "bTeste2", "cTeste3"};
-    char msg[] = "aTeste1\0Teste2\0cTeste3\0\0";
+    char msg[150] = "\0";
+    strcat(msg, "a");
+    strcat(msg, hello);
+    strcat(msg, "\0");
 
     // Creating socket file descriptor
     if ((sockfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0)
