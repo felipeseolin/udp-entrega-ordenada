@@ -13,7 +13,6 @@ int cmpfunc(const void *a, const void *b) {
 int main() {
     char str[LEN] = "cTeste\0bTeste\0aTeste\0\0";
     char output[LEN][LEN];
-    int novaStr = TRUE;
 
     char *p;
     int i = 0;
