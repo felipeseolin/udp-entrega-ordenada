@@ -10,9 +10,27 @@
 
 #define PORT 8080
 #define MAXLINE 1024
+#define TRUE 1
+#define FALSE 0
 
 int cmpfunc(const void *a, const void *b) {
     return (*(int *)a - *(int *)b);
+}
+
+int myStrlen(char str[])
+{
+    int i = 0;
+    int count = 0;
+    while (1)
+    {
+        if (str[i] == '\0' && str[i + 1] == '\0')
+        {
+            return count + 2;
+        }
+        count++;
+        i++;
+    }
+    return count;
 }
 
 void print(char string[][MAXLINE], int i)
@@ -20,6 +38,22 @@ void print(char string[][MAXLINE], int i)
     int j;
     for (j = 0; j < i; j++) {
         printf("%s\n", string[j]);
+    }
+}
+
+void myStrcpy(char newString[][MAXLINE], char oldString[][MAXLINE], int i) {
+    int j;
+    for (j = 0; j < i; j++) {
+        strcpy(newString[j], oldString[j]);
+    }
+}
+
+int myStrcmp(char string1[][MAXLINE], char string2[][MAXLINE], int i) {
+    int j;
+    for (j = 0; j < i; j++) {
+        if(strcmp(string1[j], string2[j]) != 0) {
+            return FALSE;
+        }
     }
 }
 
@@ -50,7 +84,6 @@ int main() {
 
     int sockfd;
     char buffer[MAXLINE];
-    char *hello = "Hello from server";
     struct sockaddr_in servaddr, cliaddr;
 
     // Creating socket file descriptor
@@ -78,22 +111,28 @@ int main() {
     n = recvfrom(sockfd, (char *)buffer, MAXLINE,
                  MSG_WAITALL, (struct sockaddr *)&cliaddr,
                  &len);
-    
     buffer[n] = '\0';
-    char output[MAXLINE][MAXLINE];
 
+    printf("Client: \n");
+    char output[MAXLINE][MAXLINE];
+    char compare[MAXLINE][MAXLINE];
+    
     int i = trimString(buffer, output);
+    myStrcpy(compare, output, i);
 
     qsort(output, i, MAXLINE, cmpfunc);
+    
+    int isSame = myStrcmp(compare, output, i);
+    takeofFirstChar(compare, i);
+    if (isSame == FALSE) {
+        printf("\n----A mensagem não veio ordenada---\n");
+        print(compare, i);
+    }
 
     takeofFirstChar(output, i);
 
+    printf("\n----Mensagem ordenada: ----\n");
     print(output, i);
-
-    sendto(sockfd, (const char *)hello, strlen(hello),
-           MSG_CONFIRM, (const struct sockaddr *)&cliaddr,
-           len);
-    printf("\n\nHello message sent.\n\n");
 
     return 0;
 }

@@ -11,17 +11,38 @@
 #define PORT 8080
 #define MAXLINE 1024
 
+int myStrlen(char str[])
+{
+    int i = 0;
+    int count = 0;
+    while (1)
+    {
+        if (str[i] == '\0' && str[i + 1] == '\0')
+        {
+            return count + 2;
+        }
+        count++;
+        i++;
+    }
+    return count;
+}
+
+void print(char string[][MAXLINE], int i)
+{
+    int j;
+    for (j = 0; j < i; j++)
+    {
+        printf("%s\n", string[j]);
+    }
+}
+
 // Driver code
 int main()
 {
     int sockfd;
     char buffer[MAXLINE];
-    char *hello = "Teste";
+    char *hello = "bTesteB\0cTesteC\0aTesteA\0\0";
     struct sockaddr_in servaddr;
-    char msg[150] = "\0";
-    strcat(msg, "a");
-    strcat(msg, hello);
-    strcat(msg, "\0");
 
     // Creating socket file descriptor
     if ((sockfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0)
@@ -39,7 +60,7 @@ int main()
 
     int n, len;
 
-    sendto(sockfd, (const char *)msg, strlen(msg),
+    sendto(sockfd, (const char *)hello, myStrlen(hello),
            MSG_CONFIRM, (const struct sockaddr *)&servaddr,
            sizeof(servaddr));
     printf("Hello message sent.\n");

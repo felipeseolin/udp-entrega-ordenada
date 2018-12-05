@@ -12,7 +12,7 @@
 #define MAXLINE 1024
 
 // Driver code
-int meuStrlen(char str[]){
+int myStrlen(char str[]){
     int i = 0;
     int count  = 0;
     while(1) {
@@ -25,10 +25,19 @@ int meuStrlen(char str[]){
     return count;
 }
 
+void print(char string[][MAXLINE], int i)
+{
+    int j;
+    for (j = 0; j < i; j++)
+    {
+        printf("%s\n", string[j]);
+    }
+}
+
 int main()
 {
     int sockfd;
-    char buffer[MAXLINE];
+    // char buffer[MAXLINE];
     char *hello = "bTesteB\0cTesteC\0aTesteA\0\0";
     struct sockaddr_in servaddr;
 
@@ -47,17 +56,14 @@ int main()
     servaddr.sin_addr.s_addr = INADDR_ANY;
 
     int n, len;
-    
-    sendto(sockfd, (const char *)hello, meuStrlen(hello),
-           MSG_CONFIRM, (const struct sockaddr *)&servaddr,
-           sizeof(servaddr));
-    printf("Hello message sent.\n");
 
-    n = recvfrom(sockfd, (char *)buffer, MAXLINE,
-                 MSG_WAITALL, (struct sockaddr *)&servaddr,
-                 &len);
-    buffer[n] = '\0';
-    printf("Server : %s\n", buffer);
+    int v = sendto(sockfd, (const char *)hello, myStrlen(hello),
+                   MSG_CONFIRM, (const struct sockaddr *)&servaddr,
+                   sizeof(servaddr));
+    if(v < 0) {
+        printf("\n Ocorreu um erro e sua mensagem não foi enviada\n\n");
+    }
+    printf("\n\nSua mensagem foi enviada\n\n");
 
     close(sockfd);
     return 0;
